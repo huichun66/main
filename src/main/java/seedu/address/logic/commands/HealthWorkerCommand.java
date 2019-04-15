@@ -25,7 +25,7 @@ public interface HealthWorkerCommand {
             + PREFIX_SKILLS + "SPECIALISATION...";
 
     String ADD_COMMAND_EXAMPLE = PREFIX_NAME + "Dog Terr "
-            + PREFIX_NRIC + "S1234567A"
+            + PREFIX_NRIC + "S1234567A "
             + PREFIX_PHONE + "98765432 "
             + PREFIX_ORGANIZATION + "NUH "
             + PREFIX_SKILLS + Specialisation.PHYSIOTHERAPY + " "

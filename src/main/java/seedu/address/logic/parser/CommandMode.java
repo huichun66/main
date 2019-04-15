@@ -17,10 +17,7 @@ public enum CommandMode {
     INVALID;
 
     public static final String MODE_HEALTHWORKER = "1";
-    public static final String MODE_PATIENT = "3";
     public static final String MODE_REQUEST = "2";
-    public static final String MODE_OTHERS = "4";
-    public static final String MODE_INVALID = "5";
 
     private static final Set<String> healthWorkerModes = new HashSet<>(Arrays.asList("healthworker", "h", "1"));
     private static final Set<String> requestModes = new HashSet<>(Arrays.asList("request", "r", "2"));

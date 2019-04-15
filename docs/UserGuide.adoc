@@ -350,12 +350,12 @@ denoting a duplicate worker will be displayed.
 
 *Format:*
 
-* `add request n/<patient_name> c/<condition> d/<date> t/time`
+* `add request n/<patient_name> a/<address> i/<patient_nric> p/<phone> dt/<date_time> c/<condition>...`
 
 *Shortcuts:*
 
-* `add r n/<patient_name> c/<condition> d/<date> t/time`
-* `add 2 n/<patient_name> c/<condition> d/<date> t/time`
+* `add r n/<patient_name> a/<address> i/<patient_nric> p/<phone> dt/<date_time> c/<condition>...`
+* `add 2 n/<patient_name> a/<address> i/<patient_nric> p/<phone> dt/<date_time> c/<condition>...`
 
 * Registers a new open request from `patient` of `<patient_name>` into the
 application.
@@ -363,14 +363,31 @@ application.
 experiencing. Administrative staff can then inspect the conditions that are
 stated by the `patient` and assign the appropriate health worker to handle
 these requests in the `assign` command.
-* Format for the time is `HH:mm:ss`.
+* Format for the time is `HH:mm:ss`, where HH represents the hours in a 24hr clock.
 * Format for the date is `dd-MM-yyyy`.
+* Multiple conditions can be accepted. However, each condition has to be prepended with `c/` tag.
+* Two requests are considered duplicates if they have the same patient NRIC, date, address *and* conditions. Adding duplicate requests are not allowed.
+
+[TIP]
+The arguments and their respective tags can also be reordered.
 
 Examples:
 
-* `add 1 n/Dog Terr p/92837710 i/S98817471Z o/NUH s/GENERAL_PRACTICE
-s/ORTHOPAEDIC`
-* `add request n/Pay Shun c/Heart Attack t/14:00:00 d/05:05:2019`
+
+* `add request n/Pay Shun i/S9123456G a/NUS UTown p/91234567 c/Heart Attack dt/30-01-2019 10:00:00`
+* `add request n/Jin Livingston i/S9123456G a/NUS UTown p/91234567 c/Heart Attack dt/30-01-2019 10:00:00 c/Physiotherapy`
+
+[NOTE]
+====
+If multiple prefixes are provided with valid values for parameters that can
+ only take in a single value, only the value of the last prefix will be
+ accepted. + E.g n/John n/Johnson the name field will be set to Johnson and
+ not John.
+
+Similarly for the `edit` command, in the case with multiple parameters with
+ the same prefix, only the last parameter value will be accepted as the new
+ value for that field.
+====
 
 === Editing requests/health workers : `edit`
 
@@ -422,14 +439,14 @@ Edits the phone number and name of the 1st health worker shown in the health
 worker list to be `91234567` and `John Doe` respectively. +
 
 // end::editHealthWorker[]
-healthworker` command with valid inputs.
 
 
 ==== *Editing a request*
 
 *Format:*
 
-* `edit request <index> <additional_parameters>...`
+* `edit request <index> <additional_parameters>...` +
+E.g `edit request 1 n/NAME p/PHONE a/ADDRESS i/NRIC c/CONDITION dt/DATE_TIME st/STATUS`
 
 *Shortcuts:*
 
@@ -440,14 +457,14 @@ Edits the details of a request registered in Health Hub, at
 the `<index>` specified in the request list upon entering the `edit
 request` command with valid inputs.
 
-Upon entering the `edit` command with all the necessary and valid paramters,
+Upon entering the `edit` command with all the necessary and valid parameters,
 the corresponding request/health worker at the specified `<index>`. The index refers to the
 index number shown in the displayed person list.
 
-Existing values of the health worker or request will be updated to the valid
+Existing values of the request will be updated to the valid
 input values based on the prefix specified.
 
-Any changes made to existing fields in requests and healthworkers are
+Any changes made to existing fields in requests are
 immediately reflected in the list shown on the HealthHub GUI.
 
 {nbsp}
@@ -464,6 +481,19 @@ for other fields will only cause the last one to be accepted.
 * Note that the healthworker cannot be edited using this command. To unassign an existing healthworker, `edit` the status to `PENDING`.
 To change the healthworker assigned, use the `assign` command instead.
 
+* When a request status is changed to pending, any assigned healthworker will be disassigned.
+
+* When changing the request status, there are only 3 valid statuses: PENDING, COMPLETED and ONGOING. Only these statuses will be accepted, and is not case-sensitive.
+
+* Not all the tags need to be specified.
+
+* The tags can be reordered. e.g `edit r 1 n/NAME p/91234567` is the same as `edit r 1 p/91234567 n/NAME`
+
+* Two requests are considered duplicates if they have the same patient NRIC, date, address *and* conditions. Duplicate requests are not allowed.
+
+[WARNING]
+When editing the date of a request, ensure that the date entered is correct. HealthHub accepts any valid calendar dates in the format dd-mm-yyyy HH:mm:ss (where HH represents the time in 24hr format).
+
 
 
 Examples:
@@ -473,6 +503,7 @@ Examples:
 * `edit 2 2 n/Betsy Crower` +
 All the 3 commands above edits the patient name of the 2nd request in the request list to be `Betsy
 Crower`. +
+* `edit r 1 n/NAME p/PHONE a/ADDRESS i/NRIC c/CONDITION dt/DATE_TIME st/STATUS`
 
 // tag::filterHealthWorker[]
 === Filtering health workers/requests: `filter`
@@ -695,7 +726,7 @@ proceed to assign an existing health worker in the system to handle the request,
  allocating medical resources to it and closing the request using the simple
  `assign` command +
 
-Format: `assign <request_index> <health_worker_index>`
+Format: `assign hw/<health_worker_index> r/<request_index>...`
 
 Where the `<request_index>` and `<health_worker_index>` are as shown in the
 respective health worker and requests lists in the Health Hub GUI.
@@ -704,8 +735,8 @@ respective health worker and requests lists in the Health Hub GUI.
 
 * The `request_index` and `health_worker_index` fields *must be a positive integer* 1, 2, 3, ... and not greater
 than the number of requests/health workers in the current list.
+* The prefix `r/` has to be prepended to all requests indices that you would like to assign.
 * Health worker that is assigned must be available at the current time stated by the request.
-* Health worker must have the necessary skillset and certifications that allow him to be able to take up the corresponding request.
 
 Examples:
 

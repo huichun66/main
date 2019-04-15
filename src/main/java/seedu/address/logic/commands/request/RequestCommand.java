@@ -40,7 +40,8 @@ public interface RequestCommand {
             + "[" + PREFIX_DATE + "DATE] "
             + "[" + PREFIX_STATUS + "STATUS] "
             + "[" + PREFIX_NRIC + "NRIC] "
-            + "[" + PREFIX_CONDITION + "CONDITION]...\n";
+            + "[" + PREFIX_CONDITION + "CONDITION]...\n"
+            + "Note that the date format is dd-mm-yyyy HH:mm:ss in 24hour format.\n";
 
     String EDIT_COMMAND_EXAMPLE = PREFIX_PHONE + "91234567 "
             + PREFIX_CONDITION + "Physiotherapy "

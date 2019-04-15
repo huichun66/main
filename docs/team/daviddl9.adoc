@@ -217,11 +217,10 @@ of of this by only keeping track of the start time of requests. Hence we can uti
 
     healthWorkerAppointments.add(date);
 ```
+Here is a pictorial representation of the algorithm:
 
 image::assignRegionCheck.png[]
-Figure 3.3.1.5 Shows visualisation of time ranges that are valid.
-
-The above mentioned code snippet checks that there are not clashing requests that fall within the red region, as depicted in Figure 3.3.1.5.
+Figure 3.3.1.5 Shows the visualisation of time ranges that are valid.
 
 * Alternative 2: For each request to be assigned, manually iterate through the Request list to ensure that there are not clashing dates.
 Pros: Easy to implement
@@ -241,12 +240,12 @@ Figure 3.2.1.1 Sequence Diagram for `add request` command
 
 From the diagram above:
 
-.  `LogicManager`'s execute is called when the administrator keys in `add request` and it calls upon `parseCommand` of `HealthHubParser` to parse the command
-.  `HealthHubParser` will initialize `AddCommandParser` and invoke the method `parse` to further parse `request` command
+.  `LogicManager` 's execute is called when the administrator keys in `add request` and it calls upon `parseCommand` of `HealthHubParser` to parse the command
+.  `HealthHubParser` will initialize `AddCommandParser` and invoke the method `parse` to further parse the command.
 .  `parse` will be invoked and passed the parameters of the add command.
 .  If all the arguments of the `add` commands are valid, `AddRequestCommand` will be returned to the `LogicManager`
 .  `LogicManger` will then calls the method `execute` method of `AddRequestCommand`
-.  `AddRequestCommand` will call `addRequest` passing `Request` as an argument to `Model` and after calls `commitRequestBook` method from `Model`
+.  `AddRequestCommand` will call `addRequest` passing `Request` as an argument to `Model` and after calls `commitRequestBook` method from `Model`, if all the arguments in the `Request` are valid.
 .  A `CommandResult` will be returned at the end.
 
 ==== Design Considerations
@@ -260,7 +259,7 @@ From the diagram above:
 ** Cons: It is a strict check and as a result you will not be allowed to create requests with same phone/same name etc.
 
 ===== Aspect: Data Structure of `Request`
-* **Alternative 1 (Current Approach):** All parameters in `Request` are abstracted out to have a class of its own (with the exception of the HealthWorker).
+* **Alternative 1 (Current Approach):** All parameters in `Request` are abstracted out to have a class of its own.
 ** Pros: It adheres to the Single Responsibility Principles (SRP) and the Separation of Concerns (SoC) as each parameter checks whether it is valid
 ** Cons: Many different classes are created which increases the complexity of the code
 

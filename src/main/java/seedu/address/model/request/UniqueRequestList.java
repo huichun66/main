@@ -150,7 +150,9 @@ public class UniqueRequestList implements Iterable<Request> {
         for (Request request : this.internalList) {
             if (Objects.equals(request.getHealthStaff(), oldNric)) {
                 Request editedRequest = new Request(request);
+                RequestStatus status = request.getRequestStatus();
                 editedRequest.setHealthStaff(newNric);
+                editedRequest.setRequestStatus(status);
                 setRequest(request, editedRequest);
             }
         }

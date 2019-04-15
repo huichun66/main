@@ -187,6 +187,11 @@ public class Request {
         return healthWorker;
     }
 
+    public void setRequestStatus(RequestStatus status) {
+        requireNonNull(status);
+        this.requestStatus = new RequestStatus(status.toString());
+    }
+
     public void setHealthStaff(String healthStaff) {
         requireNonNull(healthStaff);
         this.healthWorker = healthStaff;
